@@ -38,6 +38,21 @@ class AligneurDynamique(object):
         else :
             return max(ouest+self.indel,max(nord+self.indel,nordOuest+self.matching(i,j)))
 
+    def chooseValueBack(self,i,j) :
+        ouest = self.score[i][j-1]
+        nord = self.score[i-1][j]
+        nordOuest = self.score[i-1][j-1]
+        if j == 0 :
+            return nord
+        if i == 0 :
+            return ouest
+        if ouest == None :
+            return max(nord,nordOuest)
+        elif nord == None :
+            return max(ouest,nordOuest)
+        else :
+            return max(ouest,max(nord,nordOuest))
+
 
     def createMatrix(self) :
         '''
@@ -83,7 +98,49 @@ class AligneurDynamique(object):
         enfin notre fonction de back tracking pour retrouver notre alignement
         à partir d'un point de départ (i,j)
         '''
-        
+        iActuel = i
+        jActuel = j
+        iText = self.tailleText - 1
+        iRead = self.tailleRead - 1
+        text = ""
+        read = ""
+        chaine = ""
+        for k in range(self.tailleText-j) :
+            read = '-' + read
+            text = self.text[iText] + text
+            iText -= 1
+        while not (iActuel==jActuel==0):
+            ouest = self.score[iActuel][jActuel-1]
+            nord = self.score[iActuel-1][jActuel]
+            nordOuest = self.score[iActuel-1][jActuel-1]
+            valeur = self.chooseValueBack(iActuel,jActuel)
+            if valeur == ouest :
+                jActuel = jActuel-1
+                read = '-' + read
+                text = self.text[iText] + text
+                iText -= 1
+                chaine = ' ' + chaine
+            elif valeur == nord :
+                iActuel = iActuel - 1
+                text = '-' + text
+                read = self.read[iRead] + read
+                iRead -= 1
+                chaine = ' ' + chaine
+            else : #donc on choisis nordouest on regarde si match ou mismatch
+                read = self.read[iRead] + read
+                text = self.text[iText] + text
+                iRead -= 1
+                iText -= 1
+                if valeur > self.score[iActuel][jActuel] : #mismatch
+                    chaine = ' ' + chaine
+                else :
+                    chaine = '|' + chaine
+                iActuel = iActuel - 1
+                jActuel = jActuel - 1
+        return (text,chaine,read)
+
+
+
 
     def printScore(self) :
         '''
@@ -92,8 +149,18 @@ class AligneurDynamique(object):
         for i in range(self.tailleRead+1) :
             print(str(self.score[i]))
 
+bout_genome = "tgggatggatcaaccctaacagtggtggcacaaactatgcacagaagtttcagggcagggtcaccatgaccagggacacgtccatcagcacagcctacatggagctgagcaggctgagatctgacgacacggccgtgtattactgtgcgagaga"
+read_test = "ttgcacgcattgattgggatgatgataaatactacagcacatctctgaagaccaggctcaccatctccaaggacacctccaaaaaccaggtggtccttacaatgaccaacatggaccctgtggacacggccgtgtattactg"
 
-align = AligneurDynamique("ATTATCGGG", "ACTATC", 2)
+
+
+align = AligneurDynamique(bout_genome, read_test, 10)
+# align = AligneurDynamique("ATTATCGGG", "TACTATC", 2)
+
 align.createMatrix()
-align.printScore()
-print(align.departBackTrack())
+# align.printScore()
+(i,j) = align.departBackTrack()
+(text,chaine,read) = align.backTrack(i,j)
+print(text)
+print(chaine)
+print(read)
