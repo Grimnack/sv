@@ -39,7 +39,8 @@ class Main(object):
         self.text = lectureText(pathnameText)
         self.lesReads = lectureReads(pathnameReads)
         self.ts = ts.TableSuffixes(self.text)
-        print(self.ts.recherche_dicho("ACACACAAAAAGAAAGAAGAATTTTTAGGATCTTTTGTGTGCGAATAACTATGAGGAAGATTAATAATTTTCCTCTCATTGAAATTTATATCGGAATTTAAATT$"))
+        # print(self.ts.getSuffixeAt(self.ts.table[1]))
+        print(self.ts.getSuffixeAt(self.ts.table[self.ts.recherche_dicho("ACACACAAAAAGAAAGAAGAATTTTTAGGATCTTTTGTGTGCGAATAACTATGAGGAAGATTAATAATTTTCCTCTCATTGAAATTTATATCGGAATTTAAATT$")]))
 
     def run(self) :
         pass
