@@ -154,13 +154,13 @@ read_test = "ttgcacgcattgattgggatgatgataaatactacagcacatctctgaagaccaggctcaccatctc
 
 
 
-align = AligneurDynamique(bout_genome, read_test, 10)
+# align = AligneurDynamique(bout_genome, read_test, 10)
 # align = AligneurDynamique("ATTATCGGG", "TACTATC", 2)
 
-align.createMatrix()
+# align.createMatrix()
 # align.printScore()
-(i,j) = align.departBackTrack()
-(text,chaine,read) = align.backTrack(i,j)
-print(text)
-print(chaine)
-print(read)
+# (i,j) = align.departBackTrack()
+# (text,chaine,read) = align.backTrack(i,j)
+# print(text)
+# print(chaine)
+# print(read)

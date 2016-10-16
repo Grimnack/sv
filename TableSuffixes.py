@@ -40,16 +40,18 @@ class TableSuffixes(object):
         for i in range(indice,len(self.text)) :
             charText = self.text[i]
             charElement = element[iElement]
+            if charElement == "N" :
+                continue
             if charElement == "$"  :
-                print(charText,charElement,0)
+                # print(charText,charElement,0)
                 return 0
             if self.my_alphabet.index(charText) > self.my_alphabet.index(charElement) :
-                print(charText,charElement,1)
+                # print(charText,charElement,1)
                 return 1
             elif self.my_alphabet.index(charText) < self.my_alphabet.index(charElement) :
-                print(charText,charElement,-1)
+                # print(charText,charElement,-1)
                 return -1
-            print(charText,charElement,"draw")
+            # print(charText,charElement,"draw")
             iElement+= 1 
 
     def recherche_dicho(self,element) :

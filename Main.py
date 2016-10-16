@@ -1,4 +1,5 @@
 import TableSuffixes as ts
+import AligneurDynamique as al
 
 
 def lectureReads(pathname) :
@@ -32,22 +33,42 @@ def lectureText(pathname) :
 
 
 
-class Main(object):
-    """docstring for Main"""
+class Exact(object):
+    """N'affiche que les reads qui sont exactement dans le texte"""
     def __init__(self, pathnameText,pathnameReads):
-        super(Main, self).__init__()
+        super(Exact, self).__init__()
         self.text = lectureText(pathnameText)
         self.lesReads = lectureReads(pathnameReads)
         self.ts = ts.TableSuffixes(self.text)
-        # print(self.ts.getSuffixeAt(self.ts.table[1]))
-        print(self.ts.getSuffixeAt(self.ts.table[self.ts.recherche_dicho("ACACACAAAAAGAAAGAAGAATTTTTAGGATCTTTTGTGTGCGAATAACTATGAGGAAGATTAATAATTTTCCTCTCATTGAAATTTATATCGGAATTTAAATT$")]))
-
-    def run(self) :
-        pass
-        
+        # self.aligneur = al.
+        for read in self.lesReads :
+            comp = self.ts.getSuffixeAt(self.ts.table[self.ts.recherche_dicho(read)])[0:len(read)-1] + "$"
+            if read == comp :
+                print("#############################################")
+                print(read)
+                print(comp)
+        # print(self.ts.getSuffixeAt(self.ts.table[self.ts.recherche_dicho("ACACACAAAAAGAAAGAAGAATTTTTAGGATCTTTTGTGTGCGAATAACTATGAGGAAGATTAATAATTTTCCTCTCATTGAAATTTATATCGGAATTTAAATT$")]))
+ 
+class Dynamique(object):
+    """Accepte des erreurs avec Kband"""
+    def __init__(self, pathnameText,pathnameReads):
+        super(Dynamique, self).__init__()
+        self.text = lectureText(pathnameText)
+        self.lesReads = lectureReads(pathnameReads)
+        self.ts = ts.TableSuffixes(self.text)
+        for read in self.lesReads :
+            text = self.ts.getSuffixeAt(self.ts.table[self.ts.recherche_dicho(read)])[0:len(read)-1] + "$"           
+            aligneur = al.AligneurDynamique(text, read, 3)
+            aligneur.createMatrix()
+            (i,j) = aligneur.departBackTrack()
+            (text,chaine,read) = aligneur.backTrack(i,j)
+            print(text)
+            print(chaine)
+            print(read)
 
 
 # print(lectureText("text1.fna"))
 # print(lectureReads("lesReads1.fastq"))
 
-main = Main("text1.fna","lesReads1.fastq")
+# main = Exact("text1.fna","lesReads1.fastq")
+main = Dynamique("text1.fna","lesReads1.fastq")
