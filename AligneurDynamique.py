@@ -12,6 +12,7 @@ class AligneurDynamique(object):
         self.indel = -10
         self.match = 5
         self.mismatch = -4 
+        self.nbError = 0
 
 
     def matching(self,i,j) :
@@ -105,6 +106,8 @@ class AligneurDynamique(object):
         text = ""
         read = ""
         chaine = ""
+        # if j == None :
+    
         for k in range(self.tailleText-j) :
             read = '-' + read
             text = self.text[iText] + text
@@ -133,11 +136,12 @@ class AligneurDynamique(object):
                 iText -= 1
                 if valeur > self.score[iActuel][jActuel] : #mismatch
                     chaine = ' ' + chaine
+                    self.nbError += 1
                 else :
                     chaine = '|' + chaine
                 iActuel = iActuel - 1
                 jActuel = jActuel - 1
-        return (text,chaine,read)
+        return (text,chaine,read,self.nbError)
 
 
 

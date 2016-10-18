@@ -51,24 +51,28 @@ class Exact(object):
  
 class Dynamique(object):
     """Accepte des erreurs avec Kband"""
-    def __init__(self, pathnameText,pathnameReads):
+    def __init__(self, pathnameText,pathnameReads,maxError):
         super(Dynamique, self).__init__()
+        self.maxError = maxError
         self.text = lectureText(pathnameText)
         self.lesReads = lectureReads(pathnameReads)
         self.ts = ts.TableSuffixes(self.text)
         for read in self.lesReads :
             text = self.ts.getSuffixeAt(self.ts.table[self.ts.recherche_dicho(read)])[0:len(read)-1] + "$"           
-            aligneur = al.AligneurDynamique(text, read, 3)
-            aligneur.createMatrix()
-            (i,j) = aligneur.departBackTrack()
-            (text,chaine,read) = aligneur.backTrack(i,j)
-            print(text)
-            print(chaine)
-            print(read)
+            if len(text) == len(read) :
+                aligneur = al.AligneurDynamique(text, read, 3)
+                aligneur.createMatrix()
+                (i,j) = aligneur.departBackTrack()
+                (text,chaine,read,nbError) = aligneur.backTrack(i,j)
+                if nbError <= self.maxError :
+                    print(text)
+                    print(chaine)
+                    print(read)
+
 
 
 # print(lectureText("text1.fna"))
 # print(lectureReads("lesReads1.fastq"))
 
 # main = Exact("text1.fna","lesReads1.fastq")
-main = Dynamique("text1.fna","lesReads1.fastq")
+main = Dynamique("text1.fna","lesReads1.fastq",10)
