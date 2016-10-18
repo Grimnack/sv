@@ -1,4 +1,4 @@
-
+import time
 
 class TableSuffixes(object):
     """docstring for TableSuffixes"""
@@ -14,12 +14,14 @@ class TableSuffixes(object):
     def __init__(self,text):
         super(TableSuffixes, self).__init__()
         print("begin suffixe table")
+        self.time = time.time()
         self.text = text
         self.my_alphabet = ['$','A','C','G','T']
         self.table = []
         for i in range(len(text)) :
             self.table.append(i)
         self.table.sort(key=self.custom_key)
+        self.time = time.time() - self.time
         print("end suffixe table")
 
 

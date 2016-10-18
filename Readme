@@ -1,0 +1,42 @@
+Pour lancer :
+    python3 Main.py
+
+####### Les Classes #######
+
+Main(pathnameText,pathnameReads) 
+    - un texte : String
+    - des reads : [String]
+    - une table des Suffixes
+
+AligneurDynamique(text, read, maxErreur) 
+    - text : String
+    - tailleText = len(text)
+    - read : String
+    - tailleRead = len(read)
+    - maxErreur : int                        <- Sert de bornes pour le k band
+    - indel = -10
+    - match = 5
+    - mismatch = -4
+    + createMatrix()
+    + departBackTrack()
+    + backTrack(i,j)
+
+TableSuffixes(text) 
+    - text : String
+    - table : [int]
+    + custom_key(indice)                     <- utile pour trier notre table des suffixes
+    + recherche_dicho(element : String)
+
+####### Explication Algo Global #######
+
+1ere étape Lecture du fichier Text
+
+2e étape Lecture du fichier Reads
+
+3e étape création de la table des suffixes à partir du text
+
+4e étape pour chaque read va chercher ce read dans la table des suffixes (recherche dicho)
+    - une fois le sous-text trouvé on l'aligne avec le read
+    - si l'alignement contient moins de nbError alors on affiche l'alignement
+
+

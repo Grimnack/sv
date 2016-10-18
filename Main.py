@@ -1,6 +1,6 @@
 import TableSuffixes as ts
 import AligneurDynamique as al
-
+import time
 
 def lectureReads(pathname) :
     print("begin reading reads")
@@ -30,7 +30,8 @@ def lectureText(pathname) :
     print("end reading text")
     return text
 
-
+def mean(numbers) :
+    return float(sum(numbers)) / max(len(numbers), 1)
 
 
 class Exact(object):
@@ -53,18 +54,27 @@ class Dynamique(object):
     """Accepte des erreurs avec Kband"""
     def __init__(self, pathnameText,pathnameReads):
         super(Dynamique, self).__init__()
+        self.time = time.time()
         self.text = lectureText(pathnameText)
         self.lesReads = lectureReads(pathnameReads)
         self.ts = ts.TableSuffixes(self.text)
+        self.timeAlignement = []
         for read in self.lesReads :
             text = self.ts.getSuffixeAt(self.ts.table[self.ts.recherche_dicho(read)])[0:len(read)-1] + "$"           
+            timeAl = time.time()
             aligneur = al.AligneurDynamique(text, read, 3)
             aligneur.createMatrix()
             (i,j) = aligneur.departBackTrack()
             (text,chaine,read) = aligneur.backTrack(i,j)
+            timeAl = time.time() - timeAl
+            self.timeAlignement.append(timeAl)
             print(text)
             print(chaine)
             print(read)
+        self.time = time.time - self.time
+        print(self.ts.time, " secondes pour créer la table des suffixes")
+        print(mean(self.timeAlignement)," secondes en moyenne pour aligner un read à un sous-texte")
+        print(self.time, " secondes au total")
 
 
 # print(lectureText("text1.fna"))
